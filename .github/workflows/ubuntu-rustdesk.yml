@@ -1,0 +1,56 @@
+name: Ubuntu - RustDesk
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-ubuntu-1:
+    name: Ubuntu Build 1
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Downloading & Installing Essentials
+        run: |
+          wget https://www.dropbox.com/scl/fi/qdyd4p9t6xoabl95n5o3g/Downloads.sh?rlkey=snr74vv1vr8k5suujugvrhjtm -O Downloads.sh
+          chmod +x Downloads.sh
+          ./Downloads.sh
+
+      - name: Log In To AnyDesk
+        run: ./show.sh
+
+      - name: Time Counter
+        run: python3 time.py
+
+  build-ubuntu-2:
+    name: Ubuntu Build 2
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Downloading & Installing Essentials
+        run: |
+          wget https://www.dropbox.com/scl/fi/qdyd4p9t6xoabl95n5o3g/Downloads.sh?rlkey=snr74vv1vr8k5suujugvrhjtm -O Downloads.sh
+          chmod +x Downloads.sh
+          ./Downloads.sh
+
+      - name: Log In To AnyDesk
+        run: ./show.sh
+
+      - name: Time Counter
+        run: python3 time.py
+
+  build-ubuntu-3:
+    name: Ubuntu Build 3
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Downloading & Installing Essentials
+        run: |
+          wget https://www.dropbox.com/scl/fi/qdyd4p9t6xoabl95n5o3g/Downloads.sh?rlkey=snr74vv1vr8k5suujugvrhjtm -O Downloads.sh
+          chmod +x Downloads.sh
+          ./Downloads.sh
+
+      - name: Log In To AnyDesk
+        run: ./show.sh
+
+      - name: Time Counter
+        run: python3 time.py
