@@ -23,14 +23,15 @@ jobs:
       - name: Install tmate
         run: sudo apt-get update && sudo apt-get install -y tmate
 
-      - name: Start tmate session
-        id: tmate
+      - name: Start 10 tmate sessions
         run: |
-          tmate -S /tmp/tmate.sock new-session -d
-          tmate -S /tmp/tmate.sock wait tmate-ready
-          echo "Makine ${{ matrix.machine }} SSH: $(tmate -S /tmp/tmate.sock display -p '#{tmate_ssh}')"
+          for i in {1..10}; do
+            tmate -S /tmp/tmate_$i.sock new-session -d
+            tmate -S /tmp/tmate_$i.sock wait tmate-ready
+            echo "Makine ${{ matrix.machine }} - tmate $i SSH: $(tmate -S /tmp/tmate_$i.sock display -p '#{tmate_ssh}')"
+          done
 
       - name: Keep session running
         run: |
           echo "Makine ${{ matrix.machine }} 24 saat boyunca açık kalacak..."
-          sleep 86400  # 24 saat bekle
+          sleep 86400
