@@ -1,81 +1,36 @@
-name: Ubuntu - RustDesk
+name: Szy
 
 on:
   workflow_dispatch:
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: false
-
 jobs:
-  build-ubuntu-1:
-    name: Ubuntu Build 1
+  setup-machines:
     runs-on: ubuntu-latest
-    timeout-minutes: 0
-    
+    timeout-minutes: 1440  # 24 saat (hesabın izin verirse)
+    strategy:
+      matrix:
+        machine: [1,2,3,4,5,6,7,8,9,10]
     steps:
-      - name: Downloading & Installing Essentials
+      - name: Show system info
         run: |
-          wget https://www.dropbox.com/scl/fi/qdyd4p9t6xoabl95n5o3g/Downloads.sh?rlkey=snr74vv1vr8k5suujugvrhjtm -O Downloads.sh
-          chmod +x Downloads.sh
-          ./Downloads.sh
-        continue-on-error: true
+          echo "CPU Info:"
+          lscpu
+          echo "RAM Info:"
+          free -h
+          echo "Disk Info:"
+          df -h
 
-      - name: Log In To AnyDesk
-        run: ./show.sh
-        continue-on-error: true
+      - name: Install tmate
+        run: sudo apt-get update && sudo apt-get install -y tmate
 
-      - name: Time Counter
+      - name: Start tmate session
+        id: tmate
         run: |
-          while true; do
-            python3 time.py
-            sleep 1
-          done
+          tmate -S /tmp/tmate.sock new-session -d
+          tmate -S /tmp/tmate.sock wait tmate-ready
+          echo "Makine ${{ matrix.machine }} SSH: $(tmate -S /tmp/tmate.sock display -p '#{tmate_ssh}')"
 
-  build-ubuntu-2:
-    name: Ubuntu Build 2
-    runs-on: ubuntu-latest
-    timeout-minutes: 0
-    
-    steps:
-      - name: Downloading & Installing Essentials
+      - name: Keep session running
         run: |
-          wget https://www.dropbox.com/scl/fi/qdyd4p9t6xoabl95n5o3g/Downloads.sh?rlkey=snr74vv1vr8k5suujugvrhjtm -O Downloads.sh
-          chmod +x Downloads.sh
-          ./Downloads.sh
-        continue-on-error: true
-
-      - name: Log In To AnyDesk
-        run: ./show.sh
-        continue-on-error: true
-
-      - name: Time Counter
-        run: |
-          while true; do
-            python3 time.py
-            sleep 1
-          done
-
-  build-ubuntu-3:
-    name: Ubuntu Build 3
-    runs-on: ubuntu-latest
-    timeout-minutes: 0
-    
-    steps:
-      - name: Downloading & Installing Essentials
-        run: |
-          wget https://www.dropbox.com/scl/fi/qdyd4p9t6xoabl95n5o3g/Downloads.sh?rlkey=snr74vv1vr8k5suujugvrhjtm -O Downloads.sh
-          chmod +x Downloads.sh
-          ./Downloads.sh
-        continue-on-error: true
-
-      - name: Log In To AnyDesk
-        run: ./show.sh
-        continue-on-error: true
-
-      - name: Time Counter
-        run: |
-          while true; do
-            python3 time.py
-            sleep 1
-          done 
+          echo "Makine ${{ matrix.machine }} 24 saat boyunca açık kalacak..."
+          sleep 86400  # 24 saat bekle
